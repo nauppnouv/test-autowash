@@ -68,10 +68,13 @@ public class Booking {
     @OneToOne(mappedBy = "booking", fetch = FetchType.LAZY)
     private WashSession washSession;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bay_id")
+    private WashBay bay;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
 
 }
-    

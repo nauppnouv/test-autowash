@@ -43,7 +43,7 @@ public class Reward {
     @Column(name = "point_cost", nullable = false)
     private Long pointCost;
 
-    @Column(name = "discount_Value", nullable = false)
+    @Column(name = "discount_value", nullable = false)
     private BigDecimal discountValue;
 
     @Column(name = "validity_days", nullable = false)

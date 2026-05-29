@@ -46,7 +46,7 @@ public class WashSession {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "staff_id", nullable = false)
-    private Long staffId;
+    private Staff staff;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;

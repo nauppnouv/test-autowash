@@ -13,23 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Test SSH connection
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: |
-            echo "✅ SSH connected"
-            echo "Host: $(hostname)"
-            ls ~/test-autowash
-
-      - name: Deploy
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          port: 22
           script: |
             set -e
             cd ~/test-autowash
@@ -38,10 +28,10 @@ jobs:
             cd backend
             ./mvnw clean package -DskipTests
             pkill -f "java -jar target" || true
-            nohup java -jar target/*.jar > backend.log 2>&1 &
+            nohup java -jar target/*.jar > backend.log 2>&1 & disown
 
             cd ../frontend
             npm install
             npm run build
             pkill -f "serve -s dist" || true
-            nohup serve -s dist -l 3000 > frontend.log 2>&1 &
+            nohup serve -s dist -l 3000 > frontend.log 2>&1 & disown

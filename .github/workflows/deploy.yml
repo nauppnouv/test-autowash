@@ -20,18 +20,17 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            set -e
             cd ~/test-autowash
             git pull
 
             cd backend
             ./mvnw clean package -DskipTests
-            pkill -f "java -jar target" || true
-            setsid nohup java -jar target/*.jar > backend.log 2>&1 &
+            sudo systemctl restart autowash-backend
 
             cd ../frontend
             npm install --silent
             npm run build
-            pkill -f "serve -s dist" || true
-            setsid nohup serve -s dist -l 3000 > frontend.log 2>&1 &
+            sudo systemctl restart autowash-frontend
 
-            echo "✅ Auto-deploy complete"
+            echo "✅ Deploy complete"

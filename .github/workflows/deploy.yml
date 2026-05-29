@@ -19,19 +19,16 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          port: 22
+          script_stop: true
           script: |
-            set -e
             cd ~/test-autowash
             git pull
-
             cd backend
             ./mvnw clean package -DskipTests
             pkill -f "java -jar target" || true
-            nohup java -jar target/*.jar > backend.log 2>&1 & disown
-
+            nohup java -jar target/*.jar > backend.log 2>&1 &
             cd ../frontend
-            npm install
+            npm install --silent
             npm run build
             pkill -f "serve -s dist" || true
-            nohup serve -s dist -l 3000 > frontend.log 2>&1 & disown
+            nohup serve -s dist -l 3000 > frontend.log 2>&1 &

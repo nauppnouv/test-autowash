@@ -12,9 +12,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "services")
 public class Service {
@@ -47,4 +56,14 @@ public class Service {
 
     @OneToMany(mappedBy = "service")
     private List<Booking> bookings;
+
+    @OneToMany
+    @JoinColumn(name = "service_id")
+    private List<WashSession> washSessions;
+
+    @OneToMany(mappedBy = "service")
+    private List<Reward> rewards;
+
+    @OneToMany(mappedBy = "service")
+    private List<Promotion> promotions;
 }

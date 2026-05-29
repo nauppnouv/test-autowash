@@ -3,17 +3,28 @@ package com.autowashpro.backend.model.entity;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-import org.springframework.boot.autoconfigure.jms.JmsProperties.Listener.Session;
+import com.autowashpro.backend.model.enums.PaymentMethod;
+import com.autowashpro.backend.model.enums.PaymentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "billings")
 public class Billing {
@@ -22,13 +33,13 @@ public class Billing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "session_id")
-    private Session session;
+    private WashSession session;
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "voucher_id", nullable = true)
-    private Long voucherId;
+    @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
 
     @Column(name = "original_amount", nullable = false)
     private BigInteger originalAmount;
@@ -40,10 +51,12 @@ public class Billing {
     private BigInteger finalAmount;
 
     @Column(name = "payment_method", nullable = false)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Column(name = "payment_status", nullable = false)
-    private String paymentStatus;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     @Column(name = "paid_at", nullable = false)
     private LocalDateTime paidAt;
